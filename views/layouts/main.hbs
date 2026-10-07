@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <h1>Ứng dụng Quản lý Sách</h1>
+
+    <nav>
+      <a href="/books">Danh sách</a>
+      <a href="/books/new">Thêm sách</a>
+    </nav>
+  </header>
+
+  <main>
+    {{{body}}}
+  </main>
+
+  <footer>
+    <p>Họ tên: {{student.fullName}}</p>
+    <p>MSSV: {{student.mssv}}</p>
+    <p>VAT áp dụng: {{student.vatRate}}%</p>
+  </footer>
+</body>
+</html>

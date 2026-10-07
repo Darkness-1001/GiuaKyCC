@@ -1,0 +1,48 @@
+body {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+}
+
+header,
+footer {
+  padding: 16px;
+  background: #eef3f8;
+}
+
+nav a {
+  margin-right: 16px;
+}
+
+form {
+  display: grid;
+  gap: 10px;
+  max-width: 500px;
+}
+
+input,
+button {
+  padding: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.success {
+  color: green;
+}
+
+.error {
+  color: #b00020;
+}

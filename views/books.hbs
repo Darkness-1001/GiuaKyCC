@@ -1,0 +1,35 @@
+<h2>Danh sách sách</h2>
+
+{{#if message}}
+  <p class="success">{{message}}</p>
+{{/if}}
+
+<p>Số lần xem trong phiên hiện tại: {{viewCount}}</p>
+
+{{#if books.length}}
+  <table>
+    <thead>
+      <tr>
+        <th>Mã</th>
+        <th>Tên sách</th>
+        <th>Giá gốc</th>
+        <th>VAT</th>
+        <th>Giá sau VAT</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each books}}
+        <tr>
+          <td>{{productCode}}</td>
+          <td>{{title}}</td>
+          <td>{{money priceBeforeVat}}</td>
+          <td>{{vatRate}}%</td>
+          <td>{{money priceAfterVat}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>Chưa có sách.</p>
+{{/if}}
