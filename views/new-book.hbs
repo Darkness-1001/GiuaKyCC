@@ -1,0 +1,39 @@
+<h2>Thêm sách</h2>
+
+<p>Mã sản phẩm phải bắt đầu bằng <strong>{{prefix}}</strong>.</p>
+<p>VAT hiện tại: <strong>{{vatRate}}%</strong>.</p>
+
+{{#if error}}
+  <p class="error">{{error}}</p>
+{{/if}}
+
+<form action="/books" method="post">
+  <label for="productCode">Mã sản phẩm</label>
+  <input
+    id="productCode"
+    name="productCode"
+    value="{{form.productCode}}"
+    required
+  >
+
+  <label for="title">Tên sách</label>
+  <input
+    id="title"
+    name="title"
+    value="{{form.title}}"
+    required
+  >
+
+  <label for="price">Giá chưa VAT</label>
+  <input
+    id="price"
+    name="price"
+    type="number"
+    min="1"
+    step="0.01"
+    value="{{form.price}}"
+    required
+  >
+
+  <button type="submit">Thêm sách</button>
+</form>
