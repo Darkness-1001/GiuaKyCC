@@ -1,6 +1,8 @@
 require("dotenv").config();
 
 const express = require("express");
+const session = require("express-session");
+const { MongoStore } = require("connect-mongo");
 const { engine } = require("express-handlebars");
 
 const {
@@ -24,6 +26,10 @@ const PREFIX = prefixMatch[1];
 const LAST_DIGIT = Number(PREFIX.slice(-1));
 const VAT_RATE = LAST_DIGIT + 6;
 
+if (!process.env.SESSION_SECRET) {
+  throw new Error("Thiếu SESSION_SECRET");
+}
+
 // Render đứng sau reverse proxy.
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
@@ -46,6 +52,33 @@ app.set("views", "./views");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
+
+app.use(
+  session({
+    name: "book.sid",
+    secret: process.env.SESSION_SECRET,
+
+    store: MongoStore.create({
+      clientPromise: writeClientPromise,
+      dbName: process.env.DB_NAME,
+      collectionName: "sessions",
+      ttl: 60 * 60,
+      // Không tự tạo TTL index vì tài khoản ứng dụng không có quyền createIndex.
+      autoRemove: "interval",
+      autoRemoveInterval: 10,
+    }),
+
+    resave: false,
+    saveUninitialized: false,
+
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 1000,
+    },
+  })
+);
 
 // Dữ liệu dùng chung cho footer của mọi trang.
 app.use((req, res, next) => {
@@ -73,10 +106,16 @@ app.get("/books", async (req, res, next) => {
       .sort({ createdAt: -1 })
       .toArray();
 
+    req.session.viewCount = (req.session.viewCount || 0) + 1;
+
     res.render("books", {
       title: "Danh sách sách",
       books,
+      message: req.session.message,
+      viewCount: req.session.viewCount,
     });
+
+    delete req.session.message;
   } catch (error) {
     next(error);
   }
@@ -143,6 +182,9 @@ app.post("/books", async (req, res, next) => {
       priceAfterVat,
       createdAt: new Date(),
     });
+
+    req.session.message =
+      `Đã thêm sách. Giá sau VAT ${VAT_RATE}% là ${priceAfterVat}.`;
 
     res.redirect("/books");
   } catch (error) {
